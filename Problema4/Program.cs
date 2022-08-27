@@ -18,7 +18,7 @@ namespace Problema4
             {
                 foreach (var Provincia in ListaDeProvincias)
                 {
-                    Console.WriteLine(Provincia.nombre + " ID:" + Provincia.id);
+                    Console.WriteLine(Provincia.nombre + " ID: " + Provincia.id);
                 }
             }
             catch (NullReferenceException)
