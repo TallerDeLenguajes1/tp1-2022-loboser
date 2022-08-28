@@ -10,13 +10,28 @@ namespace Problema4
     {
         public static void Main(string[] args)
         {
-            Console.Write("Cantidad de Empleados a Generar: ");
-            int n = Convert.ToInt32(Console.ReadLine());
+            int n = 0;
+            do
+            {
+                try
+                {
+                    Console.Write("Cantidad de Empleados a Generar: ");
+                    n = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (System.Exception)
+                {
+                    Console.Write("Error en el ingreso de la cantidad de empleados a generar. ");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                
+            } while (n<1);
+            
             List<Empleado> ListaDeEmpleados = new List<Empleado>();
              
             for (int i = 0; i < n; i++)
             {
-                ListaDeEmpleados.Add(GenerarEmpleadoAleatorio());
+                ListaDeEmpleados.Add(GenerarEmpleado());
             }
             int j = 1;
             foreach (var empleado in ListaDeEmpleados)
@@ -139,6 +154,98 @@ namespace Problema4
             {
                 Console.WriteLine("Error en la Generacion de el Empleado");
             }
+            
+            return empleado;
+        }
+        public static DatosPersonales GenerarDatosPersonales(){
+            var rdn = new Random();
+            var datosPersonales = new DatosPersonales();
+
+            string[] estadoCivil = {"Soltero", "Casado", "Divorciado", "Viudo"};
+            string[] titulos = {"Programador Universitario", "Licenciado en Informatica", "Ingeniero en Informatica", "Ingeniero en Computacion"};
+
+            bool bandera = true;
+            do
+            {
+                try
+                {
+                    Console.Write("Nombre del Empleado: ");
+                    datosPersonales.Nombre = Console.ReadLine();
+
+                    Console.Write("Apellido: ");
+                    datosPersonales.Apellido = Console.ReadLine();
+
+                    Console.Write("Cantidad de Hijos: ");
+                    datosPersonales.Hijos = Convert.ToInt32(Console.ReadLine());
+
+                    Console.WriteLine("Estado Civil: ");
+                    Console.Write("1. Soltero 2. Casado 3. Divorciado 4. Viudo\nIngresar Opcion: ");
+                    datosPersonales.EstadoCivil = estadoCivil[Convert.ToInt32(Console.ReadLine())-1];
+
+                    Console.WriteLine("¿Tiene Titulo?: 1. No 2. Si");
+                    datosPersonales.TieneTitulo = Convert.ToBoolean(Convert.ToInt32(Console.ReadLine())-1);
+
+                    bandera = false;
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Error en el ingreso de los datos requeridos.");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+            } while (bandera);
+            
+            datosPersonales.FechaDeNacimiento = GenerarFechaDeNacimientoAleatoria();
+            if(datosPersonales.EstadoCivil == "Divorciado"){
+                datosPersonales.FechaDeDivorcio = GenerarFechaAleatoria(datosPersonales.FechaDeNacimiento.Year);
+            }else
+            {
+                datosPersonales.FechaDeDivorcio = new DateTime(1,1,1);
+            }
+
+            if (datosPersonales.TieneTitulo)
+            {
+                datosPersonales.Titulo = titulos[rdn.Next(4)];
+                datosPersonales.Universidad = "Universidad Nacional de Tucuman";
+            }
+
+            return datosPersonales;
+        }
+        public static DatosProfesionales GenerarDatosProfesionales(int anioDeNacimiento){
+            var rdn = new Random();
+            var datosProfesionales = new DatosProfesionales();
+            datosProfesionales.FechaDeIngreso = GenerarFechaAleatoria(anioDeNacimiento);
+
+            bool bandera = true;
+            do
+            {
+                try
+                {
+                    Console.WriteLine("Sueldo Basico: ");
+                    datosProfesionales.SueldoBasico = Convert.ToDouble(Console.ReadLine());
+                    if (datosProfesionales.SueldoBasico == double.PositiveInfinity || datosProfesionales.SueldoBasico<1)
+                    {
+                        throw new Exception();
+                    }
+                    bandera = false;
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Error en el ingreso del Sueldo.");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+            } while (bandera);
+            
+
+
+            return datosProfesionales;
+        }
+        public static Empleado GenerarEmpleado(){
+            var empleado = new Empleado();
+
+            empleado.DatosPersonales = GenerarDatosPersonales();
+            empleado.DatosProfesionales = GenerarDatosProfesionales(empleado.DatosPersonales.FechaDeNacimiento.Year);
             
             return empleado;
         }

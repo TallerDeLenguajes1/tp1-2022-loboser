@@ -23,9 +23,9 @@ namespace Problema4
     public class DatosProfesionales
     {
         DateTime fechaDeIngreso;
-        float sueldoBasico;
+        double sueldoBasico;
         public DateTime FechaDeIngreso { get => fechaDeIngreso; set => fechaDeIngreso = value; }
-        public float SueldoBasico { get => sueldoBasico; set => sueldoBasico = value; }
+        public double SueldoBasico { get => sueldoBasico; set => sueldoBasico = value; }
     }
     public class Empleado
     {
