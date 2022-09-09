@@ -8,6 +8,37 @@ namespace Problema3
     {
         static void Main(string[] args)
         {
+            var config = new NLog.Config.LoggingConfiguration();
+
+            var fechaActual = DateTime.Now;
+            FileInfo myFile;
+
+            if (Directory.Exists("log"))
+            {
+                var directory = new DirectoryInfo("log");
+
+                if(directory.GetFiles().Length>0){
+                    myFile = directory.GetFiles().OrderByDescending(f => f.LastWriteTime).First();
+		        }
+            }
+
+            if (myFile.Length>0)
+            {                
+                DateTime fechaDeUltimoArchivo = myFile.Name();
+            }
+            
+            if ()
+            {
+                
+            }
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
+                        
+            // Rules for mapping loggers to targets            
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile);
+                        
+            // Apply config           
+            NLog.LogManager.Configuration = config;
+
             NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
             double kilometros,litros;
