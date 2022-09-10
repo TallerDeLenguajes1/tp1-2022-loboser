@@ -9,37 +9,13 @@ namespace Problema3
         static void Main(string[] args)
         {
             var config = new NLog.Config.LoggingConfiguration();
+            string fileName = @"..\..\..\log\" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = fileName};
 
-            var fechaActual = DateTime.Now;
-            FileInfo myFile;
-
-            if (Directory.Exists("log"))
-            {
-                var directory = new DirectoryInfo("log");
-
-                if(directory.GetFiles().Length>0){
-                    myFile = directory.GetFiles().OrderByDescending(f => f.LastWriteTime).First();
-		        }
-            }
-
-            if (myFile.Length>0)
-            {                
-                DateTime fechaDeUltimoArchivo = myFile.Name();
-            }
-            
-            if ()
-            {
-                
-            }
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
-                        
-            // Rules for mapping loggers to targets            
-            config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile);
-                        
-            // Apply config           
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, logfile, "PerDay");         
             NLog.LogManager.Configuration = config;
 
-            NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+            NLog.Logger logger = NLog.LogManager.GetLogger("PerDay");
 
             double kilometros,litros;
             try
@@ -47,12 +23,12 @@ namespace Problema3
                 Console.Write("Ingresar kilometros recorridos: ");
                 kilometros = Convert.ToDouble(Console.ReadLine());
 
-                logger.Trace($"Se Ingresó {kilometros} como cantidad de kilometros");
+                logger.Info($"Se Ingresó {kilometros} como cantidad de kilometros");
 
                 Console.Write("Ingresar litros consumidos: ");
                 litros = Convert.ToDouble(Console.ReadLine());
                 
-                logger.Trace($"Se Ingresó {litros} como cantidad de litros consumidos");
+                logger.Info($"Se Ingresó {litros} como cantidad de litros consumidos");
 
 
                 if (kilometros<0 || litros<0)
@@ -62,7 +38,7 @@ namespace Problema3
 
                 double resultado = kilometros/litros;
 
-                logger.Trace($"Se realizo el calculo dando {resultado} como resultado");
+                logger.Info($"Se realizo el calculo dando {resultado} como resultado");
 
 
                 if (resultado == double.NegativeInfinity || resultado == double.PositiveInfinity)
@@ -77,21 +53,26 @@ namespace Problema3
             }
             catch(InfinityException ex){
                 Console.WriteLine("Error numero infinito (" + ex.Message + ")");
+                logger.Fatal("Error numero infinito (" + ex.Message + ")");
             }
             catch(NegativeException){
                 Console.WriteLine("Error de numero negativo");
+                logger.Fatal("Error de numero negativo");
             }
             catch (DivideByZeroException ex)
             {
                 Console.WriteLine("Error de division por 0 (" + ex.Message + ")");
+                logger.Fatal("Error de division por 0 (" + ex.Message + ")");
             }
             catch (FormatException ex)
             {
                 Console.WriteLine("Error de formato (" + ex.Message + ")");
+                logger.Fatal("Error de formato (" + ex.Message + ")");
             }
             catch (OverflowException ex)
             {
                 Console.WriteLine("Error de desbordamiento (" + ex.Message + ")");
+                logger.Fatal("Error de desbordamiento (" + ex.Message + ")");
             }
 
             Console.ReadLine();
